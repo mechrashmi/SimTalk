@@ -1,0 +1,175 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 32744 bytes for ChunkPool::allocate
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (allocation.cpp:273), pid=2840, tid=2476
+#
+# JRE version:  (8.0_66-b18) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.66-b18 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000001e4e000):  JavaThread "main" [_thread_in_vm, id=2476, stack(0x0000000002150000,0x0000000002250000)]
+
+Stack: [0x0000000002150000,0x0000000002250000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  java.lang.Class.getDeclaredFields0(Z)[Ljava/lang/reflect/Field;+0
+j  java.lang.Class.access$100(Ljava/lang/Class;Z)[Ljava/lang/reflect/Field;+2
+j  java.lang.Class$Atomic.<clinit>()V+9
+v  ~StubRoutines::call_stub
+j  java.lang.Class.newReflectionData(Ljava/lang/ref/SoftReference;I)Ljava/lang/Class$ReflectionData;+27
+j  java.lang.Class.reflectionData()Ljava/lang/Class$ReflectionData;+45
+j  java.lang.Class.privateGetDeclaredFields(Z)[Ljava/lang/reflect/Field;+4
+j  java.lang.Class.getDeclaredField(Ljava/lang/String;)Ljava/lang/reflect/Field;+11
+j  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl$1.run()Ljava/lang/reflect/Field;+8
+j  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl$1.run()Ljava/lang/Object;+1
+v  ~StubRoutines::call_stub
+j  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedExceptionAction;)Ljava/lang/Object;+0
+j  java.util.concurrent.atomic.AtomicReferenceFieldUpdater$AtomicReferenceFieldUpdaterImpl.<init>(Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/Class;)V+14
+j  java.util.concurrent.atomic.AtomicReferenceFieldUpdater.newUpdater(Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;)Ljava/util/concurrent/atomic/AtomicReferenceFieldUpdater;+10
+j  java.io.BufferedInputStream.<clinit>()V+17
+v  ~StubRoutines::call_stub
+j  java.lang.System.initializeSystemClass()V+70
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x0000000054cf1000 JavaThread "Finalizer" daemon [_thread_blocked, id=9088, stack(0x0000000055e90000,0x0000000055f90000)]
+  0x0000000054cf0000 JavaThread "Reference Handler" daemon [_thread_blocked, id=8960, stack(0x0000000055b60000,0x0000000055c60000)]
+=>0x0000000001e4e000 JavaThread "main" [_thread_in_vm, id=2476, stack(0x0000000002150000,0x0000000002250000)]
+
+Other Threads:
+  0x0000000054cea800 VMThread [stack: 0x0000000055cd0000,0x0000000055dd0000] [id=1296]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 18432K, used 635K [0x00000000eb700000, 0x00000000ecb80000, 0x0000000100000000)
+  eden space 15872K, 4% used [0x00000000eb700000,0x00000000eb79ec40,0x00000000ec680000)
+  from space 2560K, 0% used [0x00000000ec900000,0x00000000ec900000,0x00000000ecb80000)
+  to   space 2560K, 0% used [0x00000000ec680000,0x00000000ec680000,0x00000000ec900000)
+ ParOldGen       total 42496K, used 0K [0x00000000c2400000, 0x00000000c4d80000, 0x00000000eb700000)
+  object space 42496K, 0% used [0x00000000c2400000,0x00000000c2400000,0x00000000c4d80000)
+ Metaspace       used 1223K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 135K, capacity 384K, committed 384K, reserved 1048576K
+
+Card table byte_map: [0x00000000118e0000,0x0000000011ad0000] byte_map_base: 0x00000000112ce000
+
+Marking Bits: (ParMarkBitMap*) 0x0000000057e4a5b0
+ Begin Bits: [0x0000000012290000, 0x0000000013200000)
+ End Bits:   [0x0000000013200000, 0x0000000014170000)
+
+Polling page: 0x0000000000110000
+
+CodeCache: size=245760Kb used=404Kb max_used=404Kb free=245356Kb
+ bounds [0x0000000002520000, 0x0000000002790000, 0x0000000011520000]
+ total_blobs=104 nmethods=0 adapters=79
+ compilation: enabled
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (2 events):
+Event: 0.151 Thread 0x0000000001e4e000 Exception <a 'java/lang/NoSuchMethodError': Method sun.misc.Unsafe.defineClass(Ljava/lang/String;[BII)Ljava/lang/Class; name or signature does not match> (0x00000000eb70d6b0) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u66\5298\hotspot\sr·]³×NSÃ?
+Event: 0.151 Thread 0x0000000001e4e000 Exception <a 'java/lang/NoSuchMethodError': Method sun.misc.Unsafe.prefetchRead(Ljava/lang/Object;J)V name or signature does not match> (0x00000000eb70d998) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u66\5298\hotspot\src\share\vm\prims\j
+
+Events (10 events):
+Event: 0.154 loading class sun/reflect/generics/repository/AbstractRepository
+Event: 0.154 loading class sun/reflect/generics/repository/AbstractRepository done
+Event: 0.154 loading class sun/reflect/generics/repository/GenericDeclRepository done
+Event: 0.154 loading class sun/reflect/generics/repository/ClassRepository done
+Event: 0.154 loading class java/lang/Class$AnnotationData
+Event: 0.154 loading class java/lang/Class$AnnotationData done
+Event: 0.155 loading class sun/reflect/annotation/AnnotationType
+Event: 0.155 loading class sun/reflect/annotation/AnnotationType done
+Event: 0.155 loading class java/lang/ClassValue$ClassValueMap
+Event: 0.155 loading class java/util/WeakHashMap
+
+
+Dynamic libraries:
+0x000000013f2d0000 - 0x000000013f307000 	C:\Program Files\Java\jdk1.8.0_66\bin\javaw.exe
+0x0000000077980000 - 0x0000000077b2a000 	C:\Windows\SYSTEM32\ntdll.dll
+0x0000000077760000 - 0x000000007787f000 	C:\Windows\system32\kernel32.dll
+0x000007fefd970000 - 0x000007fefd9da000 	C:\Windows\system32\KERNELBASE.dll
+0x000007fefe4a0000 - 0x000007fefe57b000 	C:\Windows\system32\ADVAPI32.dll
+0x000007feff8a0000 - 0x000007feff93f000 	C:\Windows\system32\msvcrt.dll
+0x000007feff700000 - 0x000007feff71f000 	C:\Windows\SYSTEM32\sechost.dll
+0x000007fefe580000 - 0x000007fefe6ad000 	C:\Windows\system32\RPCRT4.dll
+0x0000000077880000 - 0x000000007797a000 	C:\Windows\system32\USER32.dll
+0x000007feff950000 - 0x000007feff9b7000 	C:\Windows\system32\GDI32.dll
+0x000007feff7f0000 - 0x000007feff7fe000 	C:\Windows\system32\LPK.dll
+0x000007feff720000 - 0x000007feff7ea000 	C:\Windows\system32\USP10.dll
+0x000007fefbe60000 - 0x000007fefc054000 	C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.18837_none_fa3b1e3d17594757\COMCTL32.dll
+0x000007fefdf10000 - 0x000007fefdf81000 	C:\Windows\system32\SHLWAPI.dll
+0x000007fefe8e0000 - 0x000007fefe90e000 	C:\Windows\system32\IMM32.DLL
+0x000007feffb80000 - 0x000007feffc89000 	C:\Windows\system32\MSCTF.dll
+0x00000000716e0000 - 0x00000000717b2000 	C:\Program Files\Java\jdk1.8.0_66\jre\bin\msvcr100.dll
+0x0000000057640000 - 0x0000000057ec9000 	C:\Program Files\Java\jdk1.8.0_66\jre\bin\server\jvm.dll
+0x000007fef94e0000 - 0x000007fef94e9000 	C:\Windows\system32\WSOCK32.dll
+0x000007feff9c0000 - 0x000007feffa0d000 	C:\Windows\system32\WS2_32.dll
+0x000007feff940000 - 0x000007feff948000 	C:\Windows\system32\NSI.dll
+0x000007fefb180000 - 0x000007fefb1bb000 	C:\Windows\system32\WINMM.dll
+0x000007fefc860000 - 0x000007fefc86c000 	C:\Windows\system32\VERSION.dll
+0x0000000077b50000 - 0x0000000077b57000 	C:\Windows\system32\PSAPI.DLL
+0x0000000075000000 - 0x000000007500f000 	C:\Program Files\Java\jdk1.8.0_66\jre\bin\verify.dll
+0x0000000074dd0000 - 0x0000000074df9000 	C:\Program Files\Java\jdk1.8.0_66\jre\bin\java.dll
+0x0000000074e90000 - 0x0000000074ea6000 	C:\Program Files\Java\jdk1.8.0_66\jre\bin\zip.dll
+0x000007fefe910000 - 0x000007feff69a000 	C:\Windows\system32\SHELL32.dll
+0x000007fefe290000 - 0x000007fefe493000 	C:\Windows\system32\ole32.dll
+0x000007fefd7c0000 - 0x000007fefd7cf000 	C:\Windows\system32\profapi.dll
+
+VM Arguments:
+jvm_args: -Dfile.encoding=Cp1252 
+java_command: ModelTrainer
+java_class_path (initial): C:\Users\Rashmi\workspace\SimTalk\bin
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:/Program Files/Java/jdk1.8.0_66/bin/../jre/bin/server;C:/Program Files/Java/jdk1.8.0_66/bin/../jre/bin;C:/Program Files/Java/jdk1.8.0_66/bin/../jre/lib/amd64;C:\Program Files\Java\jdk1.8.0_66\bin;D:\opencv\build\x64\vc10\bin;C:\WinAVR-20090313\bin;C:\WinAVR-20090313\utils\bin;C:\webserver\php\;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\WIDCOMM\Bluetooth Software\;C:\Program Files\WIDCOMM\Bluetooth Software\syswow64;\;C:\Program Files (x86)\Sony\VAIO Startup Setting Tool;c:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Microsoft SQL Server\90\Tools\binn\;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\OpenCV\OpenCV210\bin;C:\Users\Rashmi\eclipse-java-mars-R-win32-x86_64\eclipse;
+USERNAME=Rashmi
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 37 Stepping 5, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 (6.1.7601.23418)
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 37 stepping 5, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, ht, tsc, tscinvbit
+
+Memory: 4k page, physical 4044900k(911784k free), swap 5651876k(5128k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.66-b18) for windows-amd64 JRE (1.8.0_66-b18), built on Nov  9 2015 10:51:13 by "java_re" with MS VC++ 10.0 (VS2010)
+
+time: Sun May 15 01:22:25 2016
+elapsed time: 0 seconds (0d 0h 0m 0s)
+
