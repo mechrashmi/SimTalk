@@ -1,17 +1,17 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+
 public class ModelTrainer {
 
 	public static void main(String[] args) {
 		
-		SimTalkFileReader fileReader = new SimTalkFileReader("D:/ML/temp1.txt");
+		SimTalkFileReader fileReader = new SimTalkFileReader("D:/ML/bigtext.txt");
 		fileReader.read();
 		Model model = fileReader.model;
 		
@@ -20,7 +20,7 @@ public class ModelTrainer {
 			Map.Entry<Integer, double[]> bigramPair = bigramIterator.next();
 			double[] frequenciesGivenKey = bigramPair.getValue();
 			System.out.print(model.indexToCharacters.get(bigramPair.getKey()) + " --->");
-			for(int i = 0; i < model.totalCharacters; i++){
+			for(int i = 0; i < model.totalUniqueCharacters; i++){
 				if(frequenciesGivenKey[i] > 0){
 					System.out.print ( model.indexToCharacters.get(i) + "=" + frequenciesGivenKey[i] + " " );
 				}
@@ -28,34 +28,45 @@ public class ModelTrainer {
 			
 			System.out.println("\n");
 		}*/
-		model.generateUnigramPrefixArray();
-		model.generateBigramPrefixArray();
-		char characterToPrint = ' ';
-		double random = Math.random();
-		for(int i = 0; i < model.totalCharacters; i ++){
-			if(random <= model.unigramPrefixArray[i]){
-				characterToPrint = model.indexToCharacters.get(i);
-				System.out.print(characterToPrint);
-				break;
-			}
-		}
-		
-		for(int i = 1; i < model.totalCharacters; i++){
-			random =  Math.random();
-			double[] frequenciesGivenKey = model.bigramPrefixArray.get(model.charactersToIndex.get(characterToPrint));
-			//System.out.println(random);
-			//System.out.println(model.charactersToIndex.get(characterToPrint) + " " + characterToPrint);
-			for(int j = 0; j < model.totalCharacters; j++){
-				if(random <= frequenciesGivenKey[j]){
-					characterToPrint = model.indexToCharacters.get(j);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream("D:/ML/output.txt");
+
+			PrintStream ps = new PrintStream(fos);
+
+			model.generateUnigramPrefixArray();
+			model.generateBigramPrefixArray();
+			char characterToPrint = ' ';
+			double random = Math.random();
+			System.out.println("Printing");
+			System.setOut(ps);
+			for(int i = 0; i < model.totalUniqueCharacters; i ++){
+				if(random <= model.unigramPrefixArray[i]){
+					characterToPrint = model.indexToCharacters.get(i);
 					System.out.print(characterToPrint);
 					break;
 				}
 			}
-			
-			
-			
+
+			for(int i = 1; i < model.totalCharacters; i++){
+				random =  Math.random();
+				double[] frequenciesGivenKey = model.bigramPrefixArray.get(model.charactersToIndex.get(characterToPrint));
+		//		System.out.println(random);
+				//System.out.println(model.charactersToIndex.get(characterToPrint) + " " + characterToPrint);
+				for(int j = 0; j < model.totalUniqueCharacters; j++){
+					if(random <= frequenciesGivenKey[j]){
+						characterToPrint = model.indexToCharacters.get(j);
+						System.out.print(characterToPrint);
+						break;
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
+		System.out.println("\n" + model.totalUniqueCharacters);
+
+		//System.exit(0);
 		
 		
 		

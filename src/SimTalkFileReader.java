@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 public class SimTalkFileReader {
 	private String path ;
 	int totalCharacters;
+	int totalUniqueCharacters;
 	Map<Integer, Character> indexToCharacters = new HashMap<Integer, Character>();
 	Map<Character, Integer> charactersToIndex = new HashMap<Character, Integer>();
 	Map<Character, HashMap<Character, Double>> bigrams = new HashMap<Character, HashMap<Character, Double>>(); 
@@ -30,10 +31,18 @@ public class SimTalkFileReader {
 				char[] characters = line.toLowerCase().toCharArray();
 				if(characters.length == 0) continue;
 				firstElement = characters[0];
-				bigrams.put(firstElement, new HashMap<Character, Double>());
-				indexToCharacters.put(index, firstElement);
-				charactersToIndex.put(firstElement, index);
-				occurences.put(firstElement, 1.0);
+				if(!bigrams.containsKey(firstElement)){
+					bigrams.put(firstElement, new HashMap<Character, Double>());
+					indexToCharacters.put(index, firstElement);
+					charactersToIndex.put(firstElement, index);
+					index++;
+					occurences.put(firstElement, 1.0);
+					totalUniqueCharacters++;
+				}
+				else{
+					occurences.put(firstElement, occurences.get(firstElement) + 1);
+				}
+
 				totalCharacters += line.length();
 				
 				for(int i = 1; i < characters.length; i++){
@@ -46,16 +55,20 @@ public class SimTalkFileReader {
 						bigram.put(secondElement, bigram.get(secondElement) + 1);
 
 					bigrams.put(firstElement, bigram);
-					if(!bigrams.containsKey(secondElement)) bigrams.put(secondElement, new HashMap<Character,Double>());
-					firstElement = secondElement;
-					if(!occurences.containsKey(secondElement)){ 
+					if(!bigrams.containsKey(secondElement)){
+						bigrams.put(secondElement, new HashMap<Character,Double>());
 						occurences.put(secondElement, 1.0);
-						index++;
 						indexToCharacters.put(index, secondElement);
 						charactersToIndex.put(secondElement, index);
+						index++;
+						totalUniqueCharacters++;
 					}
-					else
+					else{
 						occurences.put(secondElement, occurences.get(secondElement) + 1);
+					}
+					firstElement = secondElement;
+					
+						
 				}
 			}
 		}
@@ -63,12 +76,12 @@ public class SimTalkFileReader {
 			e.printStackTrace();
 		}
 
-				
+		System.out.println("totalUniqueCharacters: " + totalUniqueCharacters);
 		Iterator<Entry<Character, HashMap<Character, Double>>> it = bigrams.entrySet().iterator();
 		
 		/*Populate data into Model*/
 		
-		model = new Model(totalCharacters, indexToCharacters, charactersToIndex);
+		model = new Model(totalUniqueCharacters,totalCharacters, indexToCharacters, charactersToIndex);
 		
 		while(it.hasNext()){
 			Map.Entry bigramPair = (Map.Entry) it.next();
@@ -76,16 +89,16 @@ public class SimTalkFileReader {
 			Map<Character, Double> frequenciesGivenKey = (Map) bigramPair.getValue();
 			Double totalOccurences = 0.0;
 			Iterator adjacentElementIterator = frequenciesGivenKey.entrySet().iterator();
-			double[] bigramFrequencies = new double[totalCharacters];
+			double[] bigramFrequencies = new double[totalUniqueCharacters];
 			while(adjacentElementIterator.hasNext()){
 				Map.Entry newPair = (Map.Entry) adjacentElementIterator.next();
-				Double frequency =(Double)newPair.getValue() / occurences.get(f);
+				Double frequency =round((Double)newPair.getValue() / occurences.get(f), 2);
 				Integer i = charactersToIndex.get(newPair.getKey());
 				bigramFrequencies[i] = frequency;
 			}
 			
 			model.bigram.put(charactersToIndex.get(f), bigramFrequencies);
-			model.unigram[charactersToIndex.get(f)] = occurences.get(f) / totalCharacters;		
+			model.unigram[charactersToIndex.get(f)] = round(occurences.get(f) / totalCharacters, 2);
 		}
 		
 		
