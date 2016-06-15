@@ -1,53 +1,58 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class SimTalkFileReader {
 	private String path ;
 	int totalCharacters;
-	int totalUniqueCharacters;
-	Map<Integer, Character> indexToCharacters = new HashMap<Integer, Character>();
-	Map<Character, Integer> charactersToIndex = new HashMap<Character, Integer>();
-	Map<Character, HashMap<Character, Double>> bigrams = new HashMap<Character, HashMap<Character, Double>>(); 
+	int totalUniqueStrings;
+	Map<Integer, String> indexToStrings = new HashMap<Integer, String>();
+	Map<String, Integer> stringToIndex = new HashMap<String, Integer>();
+	Map<String, HashMap<String, Double>> bigrams = new HashMap<String, HashMap<String, Double>>();
 	Map<Character, Double> unigram = new HashMap<Character, Double>();
-	Map<Character, Double> occurences = new HashMap<Character, Double>();
+	Map<String, Double> occurences = new HashMap<String, Double>();
 	Model model;
 	public SimTalkFileReader(String path) {
 		this.path = path;
 	}
 	
 	public void read(){
-		Character firstElement;
+		String firstElement;
+		String prevLineElement = null;
 		int index = 0;
 		try(BufferedReader br = new BufferedReader(new FileReader(path))){
 			String line;
 			while((line = br.readLine()) != null ){
-				char[] characters = line.toLowerCase().toCharArray();
-				if(characters.length == 0) continue;
-				firstElement = characters[0];
+				//char[] stringArray = line.toLowerCase().toCharArray();
+				//String[] stringArray = line.toLowerCase().toString().split(" ");
+				ArrayList<String> stringArray = new ArrayList<String>(Arrays.asList(line.toLowerCase().toString().split(" ")));
+				stringArray.add("\n");
+				//System.out.println(stringArray);
+				if(stringArray.size() == 0) continue;
+				if(null == prevLineElement)
+					firstElement = stringArray.get(0);
+				else
+					firstElement = prevLineElement;
 				if(!bigrams.containsKey(firstElement)){
-					bigrams.put(firstElement, new HashMap<Character, Double>());
-					indexToCharacters.put(index, firstElement);
-					charactersToIndex.put(firstElement, index);
+					bigrams.put(firstElement, new HashMap<String, Double>());
+					indexToStrings.put(index, firstElement);
+					stringToIndex.put(firstElement, index);
 					index++;
 					occurences.put(firstElement, 1.0);
-					totalUniqueCharacters++;
+					totalUniqueStrings++;
 				}
 				else{
 					occurences.put(firstElement, occurences.get(firstElement) + 1);
 				}
 
-				totalCharacters += line.length();
+				totalCharacters += stringArray.size();
 				
-				for(int i = 1; i < characters.length; i++){
-					Character secondElement = characters[i];
-					HashMap<Character, Double> bigram = bigrams.get(firstElement);
+				for(int i = 1; i < stringArray.size(); i++){
+					String secondElement = stringArray.get(i);
+					HashMap<String, Double> bigram = bigrams.get(firstElement);
 					
 					if(!bigram.containsKey(secondElement)) 
 						bigram.put(secondElement, 1.0);
@@ -56,19 +61,18 @@ public class SimTalkFileReader {
 
 					bigrams.put(firstElement, bigram);
 					if(!bigrams.containsKey(secondElement)){
-						bigrams.put(secondElement, new HashMap<Character,Double>());
+						bigrams.put(secondElement, new HashMap<String, Double>());
 						occurences.put(secondElement, 1.0);
-						indexToCharacters.put(index, secondElement);
-						charactersToIndex.put(secondElement, index);
+						indexToStrings.put(index, secondElement);
+						stringToIndex.put(secondElement, index);
 						index++;
-						totalUniqueCharacters++;
+						totalUniqueStrings++;
 					}
 					else{
 						occurences.put(secondElement, occurences.get(secondElement) + 1);
 					}
 					firstElement = secondElement;
-					
-						
+					prevLineElement = secondElement;
 				}
 			}
 		}
@@ -76,29 +80,29 @@ public class SimTalkFileReader {
 			e.printStackTrace();
 		}
 
-		System.out.println("totalUniqueCharacters: " + totalUniqueCharacters);
-		Iterator<Entry<Character, HashMap<Character, Double>>> it = bigrams.entrySet().iterator();
+		System.out.println("totalUniqueStrings: " + totalUniqueStrings);
+		Iterator<Entry<String, HashMap<String, Double>>> it = bigrams.entrySet().iterator();
 		
 		/*Populate data into Model*/
 		
-		model = new Model(totalUniqueCharacters,totalCharacters, indexToCharacters, charactersToIndex);
+		model = new Model(totalUniqueStrings,totalCharacters, indexToStrings, stringToIndex);
 		
 		while(it.hasNext()){
 			Map.Entry bigramPair = (Map.Entry) it.next();
-			Character f = (Character) bigramPair.getKey();
-			Map<Character, Double> frequenciesGivenKey = (Map) bigramPair.getValue();
+			String f = (String) bigramPair.getKey();
+			Map<String, Double> frequenciesGivenKey = (Map) bigramPair.getValue();
 			Double totalOccurences = 0.0;
 			Iterator adjacentElementIterator = frequenciesGivenKey.entrySet().iterator();
-			double[] bigramFrequencies = new double[totalUniqueCharacters];
+			double[] bigramFrequencies = new double[totalUniqueStrings];
 			while(adjacentElementIterator.hasNext()){
 				Map.Entry newPair = (Map.Entry) adjacentElementIterator.next();
 				Double frequency =round((Double)newPair.getValue() / occurences.get(f), 2);
-				Integer i = charactersToIndex.get(newPair.getKey());
+				Integer i = stringToIndex.get(newPair.getKey());
 				bigramFrequencies[i] = frequency;
 			}
 			
-			model.bigram.put(charactersToIndex.get(f), bigramFrequencies);
-			model.unigram[charactersToIndex.get(f)] = round(occurences.get(f) / totalCharacters, 2);
+			model.bigram.put(stringToIndex.get(f), bigramFrequencies);
+			model.unigram[stringToIndex.get(f)] = round(occurences.get(f) / totalCharacters, 2);
 		}
 		
 		

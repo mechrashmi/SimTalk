@@ -8,12 +8,12 @@ public class Model {
 	double[] unigram;
 	int totalUniqueCharacters;
 	int totalCharacters;
-	Map<Integer, Character> indexToCharacters;
-	Map<Character, Integer> charactersToIndex;
+	Map<Integer, String> indexToCharacters;
+	Map<String, Integer> charactersToIndex;
 	double[] unigramPrefixArray;
 	Map<Integer, double[]> bigramPrefixArray = new HashMap<Integer, double[]>();
 	
-	Model(int totalUniqueCharacters, int totalCharacters, Map<Integer, Character> indexToCharacters, Map<Character, Integer> charactersToIndex){
+	Model(int totalUniqueCharacters, int totalCharacters, Map<Integer, String> indexToCharacters, Map<String, Integer> charactersToIndex){
 		this.totalUniqueCharacters = totalUniqueCharacters;
 		this.totalCharacters = totalCharacters;
 		this.unigram = new double[totalUniqueCharacters];
@@ -41,13 +41,13 @@ public class Model {
 			
 		}
 		
-		//System.out.println(indexToCharacters);
+		//System.out.println(indexToStrings);
 		
 		/*bigramIterator = bigramPrefixArray.entrySet().iterator();
 		while(bigramIterator.hasNext()){
 			Map.Entry<Integer, double[]> bigramPair = bigramIterator.next();
 			double[] frequenciesGivenKey = bigramPair.getValue();
-			System.out.println (indexToCharacters.get(bigramPair.getKey()) + " -->");
+			System.out.println (indexToStrings.get(bigramPair.getKey()) + " -->");
 			for(int i = 0; i < totalCharacters; i++){
 				System.out.print( " " + frequenciesGivenKey[i]);
 			}

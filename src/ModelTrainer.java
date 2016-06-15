@@ -6,7 +6,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-
+/**
+ * Two things I need to change:
+ * a) need to do binary search
+ * b) extend it to words
+ */
 public class ModelTrainer {
 
 	public static void main(String[] args) {
@@ -19,10 +23,10 @@ public class ModelTrainer {
 		while(bigramIterator.hasNext()){
 			Map.Entry<Integer, double[]> bigramPair = bigramIterator.next();
 			double[] frequenciesGivenKey = bigramPair.getValue();
-			System.out.print(model.indexToCharacters.get(bigramPair.getKey()) + " --->");
-			for(int i = 0; i < model.totalUniqueCharacters; i++){
+			System.out.print(model.indexToStrings.get(bigramPair.getKey()) + " --->");
+			for(int i = 0; i < model.totalUniqueStrings; i++){
 				if(frequenciesGivenKey[i] > 0){
-					System.out.print ( model.indexToCharacters.get(i) + "=" + frequenciesGivenKey[i] + " " );
+					System.out.print ( model.indexToStrings.get(i) + "=" + frequenciesGivenKey[i] + " " );
 				}
 			}
 			
@@ -36,7 +40,7 @@ public class ModelTrainer {
 
 			model.generateUnigramPrefixArray();
 			model.generateBigramPrefixArray();
-			char characterToPrint = ' ';
+			String characterToPrint = "";
 			double random = Math.random();
 			System.out.println("Printing");
 			System.setOut(ps);
@@ -52,11 +56,11 @@ public class ModelTrainer {
 				random =  Math.random();
 				double[] frequenciesGivenKey = model.bigramPrefixArray.get(model.charactersToIndex.get(characterToPrint));
 		//		System.out.println(random);
-				//System.out.println(model.charactersToIndex.get(characterToPrint) + " " + characterToPrint);
+				//System.out.println(model.st	ringToIndex.get(characterToPrint) + " " + characterToPrint);
 				for(int j = 0; j < model.totalUniqueCharacters; j++){
 					if(random <= frequenciesGivenKey[j]){
 						characterToPrint = model.indexToCharacters.get(j);
-						System.out.print(characterToPrint);
+						System.out.print(characterToPrint + " ");
 						break;
 					}
 				}
